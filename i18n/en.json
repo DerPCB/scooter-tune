@@ -1,0 +1,91 @@
+{
+  "brand": {
+    "tag": "Performance Suite"
+  },
+  "home": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your current setup.",
+    "statusLabel": "Connection status",
+    "disconnected": "No scooter connected",
+    "statTop": "Top speed",
+    "statMode": "Active mode",
+    "statPanic": "Panic inputs",
+    "quickActions": "Quick actions",
+    "connect": "Connect scooter",
+    "scooterSettings": "Tuning",
+    "premium": "Premium"
+  },
+  "tab": {
+    "home": "Home",
+    "connect": "Connect",
+    "tuning": "Tuning",
+    "premium": "Premium"
+  },
+  "connect": {
+    "title": "Connect scooter",
+    "subtitle": "Select a connection method.",
+    "wired": "Wired",
+    "bluetooth": "Bluetooth",
+    "scanning": "Scanning for nearby devices",
+    "wiredConnecting": "Looking for a wired scooter"
+  },
+  "scooter": {
+    "title": "Tuning",
+    "subtitle": "Configure how your scooter behaves.",
+    "panic": {
+      "title": "Panic mode",
+      "badge": "Security",
+      "desc": "Choose between 2 and 12 trigger inputs. Once triggered, the scooter locks down and requires the recovery code below to reactivate.",
+      "hint": "0 / 12 selected (min. 2 required)",
+      "save": "Save configuration",
+      "recoveryLabel": "Recovery code (required on next startup)"
+    },
+    "speed": {
+      "title": "Top speed",
+      "badge": "Performance",
+      "desc": "Configurable up to 127 km/h. Actual output is limited by rider weight.",
+      "set": "configured value",
+      "weightLabel": "Rider weight (kg)",
+      "realLabel": "Estimated real top speed"
+    },
+    "start": {
+      "title": "Start speed",
+      "desc": "Speed applied the moment throttle is engaged from a stop."
+    },
+    "modes": {
+      "title": "Mode control",
+      "desc": "Set the maximum speed permitted in each ride mode.",
+      "eco": "Eco",
+      "normal": "Normal",
+      "sport": "Sport"
+    }
+  },
+  "premium": {
+    "title": "Premium",
+    "subtitle": "Advanced performance tools.",
+    "wheelie": {
+      "title": "Wheelie optimizer",
+      "desc": "Automatically balances power delivery to help lift the front wheel and hold a stable wheelie."
+    },
+    "soon": {
+      "title": "More coming soon",
+      "desc": "Additional tuning modules are in development and will unlock in a future release."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "autoConnect": "Auto-connect when scooter is nearby",
+    "theme": "Light appearance",
+    "language": "Language",
+    "firmware": "Firmware region lock",
+    "firmwareUnlocked": "Automatically bypassed",
+    "firmwareDesc": "Region restrictions are bypassed automatically on every connection.",
+    "version": "Version 1.0.0"
+  },
+  "common": {
+    "back": "Back"
+  },
+  "devices": {
+    "connected": "Connected"
+  }
+}
