@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>TunePro • Performance Telemetry</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0a0b0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <header class="app-header">
+    <div class="brand">
+      <img src="icons/icon-192.png" alt="" class="brand-avatar">
+      <div class="brand-meta">
+        <div class="brand-title-row">
+          <span class="brand-name">TunePro</span>
+          <span class="badge-pro" data-i18n="brand.proBadge">PRO</span>
+        </div>
+        <span class="brand-tag" data-i18n="brand.tag">Performance Suite</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="pill-status" id="headerPillStatus">
+        <span class="pulse-indicator offline" id="headerDot"></span>
+        <span class="pill-text" id="headerStatusText" data-i18n="dash.notConnected">No controller link</span>
+      </div>
+      <button class="icon-action-btn" id="openSettings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none">
+          <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="content-scroll">
+
+    <!-- SCREEN 1: DASHBOARD -->
+    <main class="screen-view active" id="view-dashboard">
+      <div class="view-intro">
+        <h1 class="view-title" data-i18n="dash.title">Vehicle Telemetry</h1>
+        <p class="view-sub" data-i18n="dash.subtitle">Live controller and battery metrics</p>
+      </div>
+
+      <section class="gauge-cluster">
+        <div class="gauge-center">
+          <div class="gauge-speed-wrap">
+            <span class="gauge-speed-num" id="gaugeSpeed">0</span>
+            <span class="gauge-speed-unit">KM/H</span>
+          </div>
+          <div class="gauge-meta-row">
+            <span class="gauge-chip" id="gaugeChipTarget">LUFT: 127 KM/H</span>
+            <span class="gauge-chip alt" id="gaugeChipEffective">STRASSE: KANN STARK ABWEICHEN</span>
+          </div>
+        </div>
+        <div class="cluster-subbar">
+          <div class="subbar-item">
+            <span class="subbar-label" data-i18n="dash.packVoltage">Pack Voltage</span>
+            <span class="subbar-val" id="valPackVoltage">53.4 V</span>
+          </div>
+          <div class="subbar-divider"></div>
+          <div class="subbar-item">
+            <span class="subbar-label" data-i18n="dash.cellDelta">Cell Delta</span>
+            <span class="subbar-val" id="valCellDelta">14 mV</span>
+          </div>
+          <div class="subbar-divider"></div>
+          <div class="subbar-item">
+            <span class="subbar-label" data-i18n="dash.estRange">Estimated Range</span>
+            <span class="subbar-val" id="valRange">42 km</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card-glass">
+        <div class="card-glass-header">
+          <div class="flex-align gap-8">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" class="text-accent">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="card-caption" data-i18n="dash.batteryLevel">Battery Level</span>
+          </div>
+          <span class="mono-num text-accent" id="dashBatteryPct">84%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="dashBatteryBar" style="width: 84%;"></div>
+        </div>
+        <div class="grid-2col mt-12">
+          <div class="metric-cell">
+            <span class="metric-cell-label" data-i18n="dash.controllerTemp">Controller Temp</span>
+            <span class="metric-cell-val" id="valControllerTemp">31.4 °C</span>
+          </div>
+          <div class="metric-cell">
+            <span class="metric-cell-label" data-i18n="dash.motorTemp">Motor Temp</span>
+            <span class="metric-cell-val" id="valMotorTemp">38.0 °C</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card-glass">
+        <span class="card-caption" data-i18n="dash.ridingModes">Riding Mode</span>
+        <div class="segmented-modes mt-8">
+          <button class="mode-tab" data-mode-select="eco" data-i18n="dash.modeEco">Eco</button>
+          <button class="mode-tab active" data-mode-select="normal" data-i18n="dash.modeDrive">Drive</button>
+          <button class="mode-tab" data-mode-select="sport" data-i18n="dash.modeSport">Sport</button>
+          <button class="mode-tab" data-mode-select="race" data-i18n="dash.modeRace">Race</button>
+        </div>
+      </section>
+
+      <section class="card-glass">
+        <span class="card-caption" data-i18n="dash.quickControls">Quick Toggles</span>
+        <div class="toggles-grid mt-10">
+          <button class="toggle-card" id="btnLightToggle">
+            <div class="toggle-card-ico">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <span class="toggle-card-name" data-i18n="dash.lightControl">Headlight</span>
+            <span class="toggle-card-state" id="lightStateText">OFF</span>
+          </button>
+          <button class="toggle-card" id="btnRegenToggle">
+            <div class="toggle-card-ico">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="toggle-card-name" data-i18n="dash.regenControl">KERS Regen</span>
+            <span class="toggle-card-state" id="regenStateText">MED</span>
+          </button>
+          <button class="toggle-card" id="btnLockToggle">
+            <div class="toggle-card-ico">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.8"/></svg>
+            </div>
+            <span class="toggle-card-name" data-i18n="dash.lockMotor">Electronic Lock</span>
+            <span class="toggle-card-state" id="lockStateText">UNLOCKED</span>
+          </button>
+          <button class="toggle-card" id="btnCruiseToggle">
+            <div class="toggle-card-ico">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <span class="toggle-card-name" data-i18n="dash.cruiseControl">Cruise Control</span>
+            <span class="toggle-card-state" id="cruiseStateText">ACTIVE</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="card-glass subcard-firmware">
+        <div class="flex-between">
+          <div class="flex-align gap-8">
+            <span class="mini-chip-live">DRV ACTIVE</span>
+            <span class="mono-num text-xs" data-i18n="dash.fwVersion">BLE v1.3.9 • DRV v0.1.72</span>
+          </div>
+        </div>
+        <p class="text-faint-xs mt-6" data-i18n="dash.fwStatus">Auto-region patch active (EU limit bypassed)</p>
+      </section>
+    </main>
+
+    <!-- SCREEN 2: CONNECT -->
+    <main class="screen-view" id="view-connect">
+      <div class="view-intro">
+        <h1 class="view-title" data-i18n="connect.title">Controller Link</h1>
+        <p class="view-sub" data-i18n="connect.subtitle">Pair via serial interface or BLE</p>
+      </div>
+
+      <div class="connection-selector-grid">
+        <button class="protocol-card" id="protocolWired">
+          <div class="proto-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><rect x="3" y="8" width="18" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M7 16v3M17 16v3M7 5v3M17 5v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="proto-text">
+            <span class="proto-title" data-i18n="connect.methodWired">USB-UART / Serial</span>
+            <span class="proto-sub" data-i18n="connect.methodWiredDesc">Direct hardware flashing (115200 baud)</span>
+          </div>
+        </button>
+
+        <button class="protocol-card active" id="protocolBLE">
+          <div class="proto-icon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M7 7l10 7-5 4V4l5 4L7 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="proto-text">
+            <span class="proto-title" data-i18n="connect.methodBLE">Bluetooth Low Energy</span>
+            <span class="proto-sub" data-i18n="connect.methodBLEDesc">Wireless telemetry and config sync</span>
+          </div>
+        </button>
+      </div>
+
+      <div class="scan-banner hidden" id="scanBanner">
+        <div class="scanner-ring"></div>
+        <span class="scan-label" id="scanLabel" data-i18n="connect.scanning">Scanning 2.4 GHz spectrum...</span>
+      </div>
+
+      <div class="device-section">
+        <span class="section-badge-label" data-i18n="connect.availableDevices">Available hardware</span>
+        <div class="device-listing-container" id="deviceListing"></div>
+      </div>
+    </main>
+
+    <!-- SCREEN 3: TUNING -->
+    <main class="screen-view" id="view-tuning">
+      <div class="view-intro">
+        <h1 class="view-title" data-i18n="tuning.title">Firmware Parameters</h1>
+        <p class="view-sub" data-i18n="tuning.subtitle">Adjust controller logic and motor limits</p>
+      </div>
+
+      <section class="card-glass">
+        <div class="flex-between">
+          <h2 class="card-heading" data-i18n="tuning.speedSection">Velocity & Air-Spin Rating</h2>
+          <span class="param-badge">FOC DRV</span>
+        </div>
+        <p class="card-body-text" data-i18n="tuning.speedDesc">Configurable up to 127 km/h (free-spinning / wheel elevated in the air only). Under real road load and your rider weight, effective speed will be significantly lower and deviate heavily.</p>
+
+        <div class="field-block mt-12">
+          <div class="flex-between">
+            <label class="field-meta-label" data-i18n="tuning.speedMax">Target Speed (Free-Wheel / In the Air)</label>
+            <span class="field-live-val" id="valSpeedLimit">127 km/h (in der Luft)</span>
+          </div>
+          <input type="range" min="0" max="127" value="127" class="pro-slider" id="sliderSpeedLimit">
+          <div class="slider-marks">
+            <span>0</span>
+            <span>25 (EU)</span>
+            <span>45</span>
+            <span>85</span>
+            <span>127 km/h (Luft)</span>
+          </div>
+        </div>
+
+        <div class="readout-box mt-12">
+          <div class="flex-between">
+            <span class="readout-title" data-i18n="tuning.realSpeedEst">Real-World Road Speed</span>
+            <span class="readout-highlight" id="valRealSpeed" data-i18n="tuning.realNotice">KANN STARK ABWEICHEN</span>
+          </div>
+          <div class="readout-subline" id="valWeightPenaltyNote" data-i18n="tuning.realDesc">127 km/h wird nur mit frei schwebendem Rad in der Luft erreicht. Auf Asphalt weicht die reale Geschwindigkeit durch dein Gewicht, Gegenwind und Rollwiderstand extrem stark nach unten ab.</div>
+        </div>
+      </section>
+
+      <section class="card-glass">
+        <h2 class="card-heading" data-i18n="tuning.startSpeed">Motor Start-Up Speed</h2>
+        <p class="card-body-text" data-i18n="tuning.startSpeedDesc">Threshold before throttle engagement registers</p>
+        <select class="pro-select mt-10" id="selectStartSpeed">
+          <option value="0" data-i18n="tuning.zeroStart">0 km/h (Direct Zero-Start)</option>
+          <option value="1">1 km/h</option>
+          <option value="2">2 km/h</option>
+          <option value="3" selected>3 km/h (Factory Default)</option>
+          <option value="4">4 km/h</option>
+          <option value="5">5 km/h (Safe Push-Start)</option>
+        </select>
+      </section>
+
+      <section class="card-glass">
+        <h2 class="card-heading" data-i18n="tuning.modesSection">Per-Mode Free-Spin Limit</h2>
+        <p class="card-body-text" data-i18n="tuning.modesDesc">Governor limit per active dashboard profile (real road speed deviates heavily)</p>
+
+        <div class="mode-tuning-row mt-12">
+          <span class="mode-tag eco">ECO</span>
+          <input type="range" min="5" max="45" value="15" class="pro-slider" id="sliderModeEco">
+          <span class="mode-metric" id="valModeEco">15 km/h</span>
+        </div>
+
+        <div class="mode-tuning-row mt-10">
+          <span class="mode-tag normal">DRIVE</span>
+          <input type="range" min="10" max="65" value="25" class="pro-slider" id="sliderModeDrive">
+          <span class="mode-metric" id="valModeDrive">25 km/h</span>
+        </div>
+
+        <div class="mode-tuning-row mt-10">
+          <span class="mode-tag sport">SPORT</span>
+          <input type="range" min="15" max="127" value="45" class="pro-slider" id="sliderModeSport">
+          <span class="mode-metric" id="valModeSport">45 km/h</span>
+        </div>
+
+        <div class="mode-tuning-row mt-10">
+          <span class="mode-tag race">RACE</span>
+          <input type="range" min="20" max="127" value="127" class="pro-slider" id="sliderModeRace">
+          <span class="mode-metric" id="valModeRace">127 km/h</span>
+        </div>
+      </section>
+
+      <section class="card-glass">
+        <div class="flex-between">
+          <h2 class="card-heading" data-i18n="tuning.panicSection">Panic / Police Lockdown</h2>
+          <span class="param-badge badge-warning">STEALTH</span>
+        </div>
+        <p class="card-body-text" data-i18n="tuning.panicDesc">Configure a stealth physical combination (2 to 12 inputs). Triggering forces stock 20 km/h mode and requires the 6-digit recovery PIN to restore.</p>
+
+        <div class="chip-grid mt-10" id="panicChipsContainer"></div>
+        <span class="helper-hint" id="panicSelectionHint">Selected: 0 / 12 (minimum 2 required)</span>
+
+        <button class="pro-btn-secondary mt-8" id="btnSavePanic" data-i18n="tuning.savePanic">Flash Panic Profile</button>
+
+        <div class="recovery-badge-card hidden" id="recoveryBadgeCard">
+          <div class="recovery-caption" data-i18n="tuning.recoveryLabel">6-digit Recovery PIN (required after lockdown)</div>
+          <div class="pin-digits" id="pinDisplay">------</div>
+          <div class="recovery-subnote" data-i18n="tuning.recoverySaved">PIN stored in controller NVRAM</div>
+        </div>
+      </section>
+
+      <section class="card-glass">
+        <h2 class="card-heading" data-i18n="tuning.advancedSection">Motor Phase & Throttle Response</h2>
+
+        <div class="field-block mt-10">
+          <div class="flex-between">
+            <label class="field-meta-label" data-i18n="tuning.phaseCurrent">Max Motor Phase Current</label>
+            <span class="field-live-val" id="valPhaseCurrent">32 A</span>
+          </div>
+          <input type="range" min="15" max="65" value="32" class="pro-slider" id="sliderPhaseCurrent">
+          <span class="text-faint-xs" data-i18n="tuning.phaseCurrentDesc">Peak amperage delivered to stator coils (higher = torque, heat)</span>
+        </div>
+
+        <div class="field-block mt-14">
+          <div class="flex-between">
+            <label class="field-meta-label" data-i18n="tuning.regenCurrent">KERS Regen Brake Current</label>
+            <span class="field-live-val" id="valRegenCurrent">18 A</span>
+          </div>
+          <input type="range" min="5" max="35" value="18" class="pro-slider" id="sliderRegenCurrent">
+          <span class="text-faint-xs" data-i18n="tuning.regenCurrentDesc">Negative phase current applied during deceleration</span>
+        </div>
+
+        <div class="field-block mt-14">
+          <label class="field-meta-label" data-i18n="tuning.throttleCurve">Throttle Response Curve</label>
+          <select class="pro-select mt-6" id="selectThrottleCurve">
+            <option value="expo" data-i18n="tuning.throttleCurveExpo">Exponential (Smooth initial, aggressive top)</option>
+            <option value="linear" data-i18n="tuning.throttleCurveLinear">Linear (1:1 response)</option>
+            <option value="aggressive" data-i18n="tuning.throttleCurveAggressive">Sport Direct (Zero throttle smoothing)</option>
+          </select>
+        </div>
+
+        <button class="pro-btn-primary mt-16" id="btnApplyAll" data-i18n="tuning.saveAll">Apply All Parameters</button>
+      </section>
+    </main>
+
+    <!-- SCREEN 4: PREMIUM -->
+    <main class="screen-view" id="view-premium">
+      <div class="view-intro">
+        <h1 class="view-title" data-i18n="premium.title">Performance Suite</h1>
+        <p class="view-sub" data-i18n="premium.subtitle">Experimental algorithm extensions</p>
+      </div>
+
+      <section class="card-glass">
+        <div class="toggle-card-row">
+          <div class="toggle-copy">
+            <div class="flex-align gap-8">
+              <h2 class="card-heading" data-i18n="premium.wheelieTitle">Wheelie Assist Algorithm</h2>
+              <span class="mini-chip-pro">IMU 6-AXIS</span>
+            </div>
+            <p class="card-body-text" data-i18n="premium.wheelieDesc">Reads internal 6-axis IMU pitch data and modulates PWM motor duty cycle to hold front-wheel lift without loop-out risk.</p>
+          </div>
+          <label class="ios-switch">
+            <input type="checkbox" id="toggleWheelie">
+            <span class="ios-slider"></span>
+          </label>
+        </div>
+
+        <div class="wheelie-expanded-controls mt-12" id="wheelieSubControls">
+          <div class="flex-between">
+            <label class="field-meta-label" data-i18n="premium.wheelieAngle">Target Balance Angle</label>
+            <span class="field-live-val" id="valWheelieAngle">28°</span>
+          </div>
+          <input type="range" min="15" max="42" value="28" class="pro-slider" id="sliderWheelieAngle">
+        </div>
+      </section>
+
+      <section class="card-glass">
+        <div class="toggle-card-row">
+          <div class="toggle-copy">
+            <div class="flex-align gap-8">
+              <h2 class="card-heading" data-i18n="premium.fieldWeakeningTitle">Electronic Field Weakening (Flux)</h2>
+              <span class="mini-chip-pro">FOC D-AXIS</span>
+            </div>
+            <p class="card-body-text" data-i18n="premium.fieldWeakeningDesc">Injects negative d-axis stator current at top RPM to reduce counter-EMF, allowing +12-18 km/h over rated motor speed at cost of heat.</p>
+          </div>
+          <label class="ios-switch">
+            <input type="checkbox" id="toggleFlux">
+            <span class="ios-slider"></span>
+          </label>
+        </div>
+
+        <div class="flux-expanded-controls mt-12" id="fluxSubControls">
+          <div class="flex-between">
+            <label class="field-meta-label" data-i18n="premium.fluxCurrent">Max Flux Current</label>
+            <span class="field-live-val" id="valFluxCurrent">12 A</span>
+          </div>
+          <input type="range" min="4" max="25" value="12" class="pro-slider" id="sliderFluxCurrent">
+        </div>
+      </section>
+
+      <section class="card-glass">
+        <div class="toggle-card-row">
+          <div class="toggle-copy">
+            <h2 class="card-heading" data-i18n="premium.tempThrottleTitle">Dynamic Thermal Throttling</h2>
+            <p class="card-body-text" data-i18n="premium.tempThrottleDesc">Automatically ramps down phase amps if MOSFET junction temperature crosses 78°C to protect motor windings.</p>
+          </div>
+          <label class="ios-switch">
+            <input type="checkbox" id="toggleThermal" checked>
+            <span class="ios-slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="card-glass subdued">
+        <div class="flex-align gap-8">
+          <h2 class="card-heading text-dim" data-i18n="premium.comingSoonTitle">Upcoming Firmware Modules</h2>
+          <span class="param-badge">IN LAB</span>
+        </div>
+        <p class="card-body-text text-dim mt-6" data-i18n="premium.comingSoonDesc">CAN-Bus packet sniffer, traction slip control (TC), and custom battery SOC voltage curves are currently undergoing bench testing.</p>
+      </section>
+    </main>
+
+  </div>
+
+  <nav class="bottom-tabbar">
+    <button class="tabbar-item active" data-tab-target="dashboard">
+      <div class="tab-icon-wrap">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><rect x="3" y="3" width="7" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="2" stroke="currentColor" stroke-width="1.8"/></svg>
+      </div>
+      <span class="tab-label" data-i18n="tab.dashboard">Dashboard</span>
+    </button>
+    <button class="tabbar-item" data-tab-target="connect">
+      <div class="tab-icon-wrap">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M7 7l10 7-5 4V4l5 4L7 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="tab-label" data-i18n="tab.connect">Connect</span>
+    </button>
+    <button class="tabbar-item" data-tab-target="tuning">
+      <div class="tab-icon-wrap">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M4 6h16M4 12h10M4 18h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="17" cy="6" r="2.5" fill="currentColor"/><circle cx="8" cy="18" r="2.5" fill="currentColor"/></svg>
+      </div>
+      <span class="tab-label" data-i18n="tab.tuning">Tuning</span>
+    </button>
+    <button class="tabbar-item" data-tab-target="premium">
+      <div class="tab-icon-wrap">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="tab-label" data-i18n="tab.premium">Premium</span>
+    </button>
+  </nav>
+
+</div>
+
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="settings-drawer" id="settingsDrawer">
+  <div class="drawer-header">
+    <h2 class="drawer-title" data-i18n="settings.title">Application Preferences</h2>
+    <button class="icon-action-btn" id="closeSettings">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    <div class="drawer-setting-row">
+      <div class="drawer-setting-text">
+        <span class="drawer-setting-name" data-i18n="settings.autoConnect">Auto-pair with nearest controller</span>
+        <span class="drawer-setting-sub" data-i18n="settings.autoConnectSub">Scans BLE advertisements automatically on startup</span>
+      </div>
+      <label class="ios-switch">
+        <input type="checkbox" id="toggleAutoConnect">
+        <span class="ios-slider"></span>
+      </label>
+    </div>
+
+    <div class="drawer-setting-row">
+      <div class="drawer-setting-text">
+        <span class="drawer-setting-name" data-i18n="settings.theme">Light theme appearance</span>
+      </div>
+      <label class="ios-switch">
+        <input type="checkbox" id="toggleTheme">
+        <span class="ios-slider"></span>
+      </label>
+    </div>
+
+    <div class="drawer-setting-block">
+      <span class="drawer-setting-name" data-i18n="settings.language">Interface Language</span>
+      <select class="pro-select mt-8" id="selectAppLanguage"></select>
+    </div>
+
+    <div class="drawer-setting-block">
+      <span class="drawer-setting-name" data-i18n="settings.firmwareLock">Firmware region bypass</span>
+      <div class="firmware-tag mt-6">
+        <span class="mini-dot-active"></span>
+        <span data-i18n="settings.active">Active</span>
+      </div>
+      <p class="text-faint-xs mt-6" data-i18n="settings.firmwareLockDesc">Germany 20 km/h and EU 25 km/h restrictions are patched at runtime.</p>
+    </div>
+  </div>
+
+  <div class="drawer-footer">
+    <span class="text-faint-xs" data-i18n="settings.version">Build v2.4.2 (Clean Architecture)</span>
+  </div>
+</aside>
+
+<div class="app-toast" id="appToast">Parameters committed to controller NVRAM</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
